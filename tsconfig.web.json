@@ -13,6 +13,8 @@
       "@renderer/*": [
         "src/renderer/src/*"
       ]
-    }
+    },
+    "allowImportingTsExtensions": true,
+    "allowJs": true
   }
 }
