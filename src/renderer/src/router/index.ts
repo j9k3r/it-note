@@ -1,9 +1,9 @@
 // import { createRouter, createWebHistory } from 'vue-router'
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Electron from '../components/Electron.vue'
-import { loadLayoutMiddleware } from './middleware/loadLayout.middleware'
+import Electron from '@/components/Electron.vue'
+import { loadLayoutMiddleware } from '@/router/middleware/loadLayout.middleware'
 
-import Test from "../components/Test.vue";
+import Test from '@/components/Test.vue'
 
 const router = createRouter({
   // history: createWebHistory(import.meta.env.BASE_URL),

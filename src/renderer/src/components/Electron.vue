@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Versions from './Versions.vue'
+import Versions from '@/components/Versions.vue'
 </script>
 
 <template>
@@ -96,5 +96,5 @@ import Versions from './Versions.vue'
 </template>
 
 <style lang="less">
-@import '../assets/css/styles.less';
+@import '@/assets/css/styles.less';
 </style>

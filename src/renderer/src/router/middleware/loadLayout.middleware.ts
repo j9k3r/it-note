@@ -1,4 +1,4 @@
-import { LayoutToFileMap } from '../../layouts/layouts.types'
+import { LayoutToFileMap } from '@/layouts/layouts.types'
 
 export async function loadLayoutMiddleware(route) {
   const { layout } = route.meta,
