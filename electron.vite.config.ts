@@ -19,5 +19,12 @@ export default defineConfig({
       }
     },
     plugins: [vue()]
+    // css: {
+    //   preprocessorOptions: {
+    //     scss: {
+    //       additionalData: '@import "@scss/shared.scss";'
+    //     }
+    //   }
+    // }
   }
 })

@@ -97,4 +97,7 @@ import Versions from '@/components/Versions.vue'
 
 <style lang="less">
 @import '@/assets/css/styles.less';
+//@import '../assets/css/styles.less';
+//@import './src/renderer/src/assets/css/styles.less';
+
 </style>

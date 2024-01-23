@@ -21,6 +21,17 @@ const router = createRouter({
     },
   ]
 })
-
-router.beforeEach(loadLayoutMiddleware)
+router.beforeEach(async (to, from, next) => {
+  try {
+    const result = await loadLayoutMiddleware(to)
+    if (result.result) {
+      next()
+    } else {
+      next(new Error(result.error?.message || 'An error occurred'))
+    }
+  } catch (error) {
+    console.error('An error occurred while processing the route:', error)
+    // next(error) // перенаправление с сообщением об ошибке
+  }
+})
 export default router
