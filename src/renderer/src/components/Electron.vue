@@ -3,7 +3,7 @@ import Versions from '@/components/Versions.vue'
 </script>
 
 <template>
-  <Versions></Versions>
+<!--  <Versions></Versions>-->
 
   <svg class="hero-logo" viewBox="0 0 900 300">
     <use xlink:href="../assets/icons.svg#electron" />
