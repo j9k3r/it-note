@@ -4,7 +4,11 @@ export type ResultType = {
   data?: object
 }
 
-export type HtmlResultType = ResultType & {
+export type ResultHtmlType = ResultType & {
   errorMsgStr: string
   errorStackStr: string
+}
+
+export type ResultErrCapturedType = ResultType & {
+  componentName: string
 }

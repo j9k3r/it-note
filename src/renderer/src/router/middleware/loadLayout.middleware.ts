@@ -7,13 +7,12 @@ export async function loadLayoutMiddleware(route: RouteLocationNormalized): Prom
 
   let normalizedLayoutName: string | unknown
   layout === undefined ? (normalizedLayoutName = 'default') : (normalizedLayoutName = layout)
-  // normalizedLayoutName = 1 // для ошибки типа скрипта
+  normalizedLayoutName = 1 // для ошибки типа скрипта
   if (typeof normalizedLayoutName === 'string') {
     const fileName = layoutToFileMap[normalizedLayoutName]
     const fileNameWithoutExtension = fileName.split('.vue')[0]
     const component = await import(`../../layouts/${fileNameWithoutExtension}.vue`)
 
-    // route.meta!.layoutComponent = component.default // подавление ! если точно есть route.meta
     if (typeof route.meta === 'undefined') {
       return resultFn(false, new Error('route.meta: undefined'))
     }

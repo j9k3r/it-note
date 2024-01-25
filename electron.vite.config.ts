@@ -2,7 +2,7 @@ import { resolve } from 'path'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import vue from '@vitejs/plugin-vue'
 
-import { fileURLToPath, URL } from 'node:url'
+// import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
   main: {
@@ -15,7 +15,8 @@ export default defineConfig({
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer/src'),
-        '@': fileURLToPath(new URL('./src/renderer/src', import.meta.url))
+        '@': resolve('src/renderer/src') // если псевдоним для корня
+        // '@': fileURLToPath(new URL('./src/renderer/src', import.meta.url))
       }
     },
     plugins: [vue()]

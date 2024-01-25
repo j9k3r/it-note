@@ -1,62 +1,43 @@
 <script setup type="ts">
-import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
-import { computed, onMounted, ref, watch, onErrorCaptured, onBeforeUnmount, onBeforeMount, watchEffect } from "vue";
-import Error from "../components/Error.vue";
-// import { HtmlResultType } from "../main.types";
+import { useRoute } from "vue-router";
+// import {
+//   computed,
+// } from "vue";
+// import ErrorComponent from "../components/ErrorComponent.vue";
+// import { ResultHtmlType } from "../main.types";
+
+// const props = defineProps({
+//   errComponents: {
+//     type: Array,
+//     required: false
+//   }
+// })
+
+// const countErrCompnent = computed(() => props.errComponents.length);
 
 const route = useRoute()
-const router = useRouter()
 
-
-// const sessionValue = ref([])
-
-//значение из сессии
-const sessionValue = computed(() => JSON.parse(sessionStorage.getItem('Errors')) || [] )
-
-// const sessionValue = ref(sessionStorage.getItem('Errors') || []);
-
-// Используем хук watch для отслеживания изменений в сессии
-
-// watch( () => sessionStorage.getItem('Errors'), (newValue) => {
-//   sessionValue.value = JSON.parse(newValue) || [];
-// }, { immediate: true });
-
-// onMounted(async () => {
-//   const errors = JSON.parse(sessionStorage.getItem('Errors')) || [];
-//   sessionValue.value = errors;
-// });
-
-
-
-// const errors = ref([]);
-//
-// const updateErrorsFromSessionStorage = () => {
-//   const storedErrors = sessionStorage.getItem('Errors');
-//   errors.value = storedErrors ? JSON.parse(storedErrors) : [];
-// };
-//
-// watchEffect(updateErrorsFromSessionStorage);
-
-
-
-// onBeforeMount(() => {
-//
-// })
-
-// onBeforeRouteLeave(() => {
-//   sessionStorage.removeItem('Errors')
-// })
-
-// onBeforeUnmount(() => {
-//     sessionStorage.removeItem('Errors')
+// const metaError = computed(() => {
+//   if (route.meta && 'errors' in route.meta)
+//     return route.meta.errors;
+//   return []
 // })
 
 
-
+function crErr () {
+  throw new Error('Пример ошибки');
+}
 </script>
 
+
 <template>
-  <Error v-if="sessionValue.length !== 0" :session-value="sessionValue"></Error>
+  <button @click="crErr" style="height: 30px">СОздать ошибку</button>
+  <!--    v-if="metaError.length !== 0 || props.errComponents.length !== 0"-->
+<!--  <ErrorComponent-->
+<!--    v-if="countErrCompnent !== 0"-->
+<!--    :meta-error="metaError"-->
+<!--    :err-components="errComponents"-->
+<!--  ></ErrorComponent>-->
   <component :is="route.meta.layoutComponent">
     <slot />
   </component>
