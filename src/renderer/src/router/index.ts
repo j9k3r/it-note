@@ -3,8 +3,8 @@ import Electron from '@/components/test/Electron.vue'
 import Test from '@/components/test/Test.vue'
 import { loadLayoutMiddleware } from '@/router/middleware/loadLayout.middleware'
 
-import { ResultHtmlType, ResultType } from '@/main.types'
-import { resultErrorToJson, saveErrorsToMeta } from '@/result.functions'
+import { ResultType } from '@/main.types'
+import { saveErrorsToMeta } from '@/result.functions'
 
 const router = createRouter({
   // history: createWebHistory(import.meta.env.BASE_URL),

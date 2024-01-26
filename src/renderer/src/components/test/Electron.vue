@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import Versions from '@/components/test/Versions.vue'
 
-// console.log(jobaiden)
+function crErr () {
+  throw new Error('Пример ошибки');
+}
 </script>
 
 <template>
-<!--  <Versions></Versions>-->
+  <button @click="crErr" style="height: 30px">СОздать ошибку</button>
+  <!--  <Versions></Versions>-->
   <svg class="hero-logo" viewBox="0 0 900 300">
     <use xlink:href="../../assets/icons.svg#electron" />
   </svg>

@@ -1,3 +1,6 @@
+// import { Component } from 'vue'
+import { ComponentOptions } from 'vue'
+
 export type ResultType = {
   result: boolean
   error?: Error
@@ -11,4 +14,6 @@ export type ResultHtmlType = ResultType & {
 
 export type ResultErrCapturedType = ResultType & {
   componentName: string
+  component: ComponentOptions
+  info: string
 }

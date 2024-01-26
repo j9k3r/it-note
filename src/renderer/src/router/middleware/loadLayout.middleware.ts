@@ -7,7 +7,7 @@ export async function loadLayoutMiddleware(route: RouteLocationNormalized): Prom
 
   let normalizedLayoutName: string | unknown
   layout === undefined ? (normalizedLayoutName = 'default') : (normalizedLayoutName = layout)
-  normalizedLayoutName = 1 // для ошибки типа скрипта
+  // normalizedLayoutName = 1 // для ошибки типа скрипта
   if (typeof normalizedLayoutName === 'string') {
     const fileName = layoutToFileMap[normalizedLayoutName]
     const fileNameWithoutExtension = fileName.split('.vue')[0]
