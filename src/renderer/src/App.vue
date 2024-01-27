@@ -22,18 +22,33 @@ const logError = (error: Error, component, info: string) => {
   console.log('Ошибка перехвачена')
 }
 
-// Вызывается при монтировании компонента
-// onMounted(() => {
-// пример ошибки
-// throw new Error('Пример ошибки');
-// })
-
 // Обработка ошибок в компоненте
 onErrorCaptured(logError)
 provide('errComponents', errComponents)
 
-function cbSumErr(ev: number) {
-  errQua.value = ev
+function cbSumErr(ev: number): boolean {
+  const oldStateErrQua = errQua.value
+  try {
+    if (oldStateErrQua === ev && oldStateErrQua != 0) {
+      throw new Error('error change quantity errQua')
+    }
+    errQua.value = ev
+    return true
+  } catch (e) {
+    if (e instanceof Error) {
+      const errc = new Error(e.message)
+      errComponents.value.push({
+        result: false,
+        error: errc,
+        component: self,
+        info: errc.message,
+        componentName: 'App.vue'
+      })
+      return false
+    } else {
+      throw new Error('broken catch')
+    }
+  }
 }
 </script>
 

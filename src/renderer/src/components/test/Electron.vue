@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import Versions from '@/components/test/Versions.vue'
-
-function crErr () {
-  throw new Error('Пример ошибки');
-}
+// import Versions from '@/components/test/Versions.vue'
 </script>
 
 <template>
-  <button @click="crErr" style="height: 30px">СОздать ошибку</button>
-  <!--  <Versions></Versions>-->
+  <button @click="() => { throw new Error('test err in Electron.vue') }" style="height: 30px">СОздать ошибку</button>
+<!--    <Versions></Versions>-->
   <svg class="hero-logo" viewBox="0 0 900 300">
     <use xlink:href="../../assets/icons.svg#electron" />
   </svg>
   <h2 class="hero-text">You've successfully created an Electron project with Vue and TypeScript</h2>
   <p class="hero-tagline">Please try pressing <code>F12</code> to open the devTool</p>
   <p>
-    <router-link :to="{'name':'test', params: {test: 'Hello world' }}">test page</router-link>
+    <nav>
+      <ul>
+        <li><router-link :to="{'name':'test', params: {test: 'Hello world' }}">test page</router-link></li>
+        <li><router-link :to="{'name':'note'}">Note</router-link></li>
+      </ul>
+    </nav>
   </p>
 
   <div class="links">

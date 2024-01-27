@@ -5,6 +5,7 @@ import { loadLayoutMiddleware } from '@/router/middleware/loadLayout.middleware'
 
 import { ResultType } from '@/main.types'
 import { saveErrorsToMeta } from '@/result.functions'
+import Note from '@/components/note/Note.vue'
 
 const router = createRouter({
   // history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +20,11 @@ const router = createRouter({
       path: '/test/:test',
       name: 'test',
       component: Test
+    },
+    {
+      path: '/note',
+      name: 'note',
+      component: Note
     },
   ]
 })
