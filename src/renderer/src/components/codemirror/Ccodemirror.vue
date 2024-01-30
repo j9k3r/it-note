@@ -10,8 +10,14 @@ import { langs, langList } from "./langs";
 const props = defineProps({
   code: String,
   id: Number,
-  theme: String,
-  lang: String
+  theme: {
+    type: String,
+    default: themesList[0 as keyof typeof themesList]
+  },
+  lang: {
+    type: String,
+    default: langList[0 as keyof typeof langList]
+  }
 })
 
 const notes = useNotesStore()
@@ -122,23 +128,32 @@ function changeDoc(ev, id) {
   notes.updateDoc(ev, id)
 }
 
+function addCode() {
+  notes.addCodemirror(props.id)
+}
+
+function removeCode() {
+  notes.removeCodemirror(props.id)
+}
+
 </script>
 
 <template>
 
   <section>
-    <div>lang:
-      <select @change="changeLang($event)">
-        <option v-for="(item, index) in langsListArray()" :key="index" :value="index" :selected="item === extensions[0].name">{{ item }}</option>
-      </select>
-    </div>
+    <header>
+      <div>lang:
+        <select @change="changeLang($event)">
+          <option v-for="(item, index) in langsListArray()" :key="index" :value="index" :selected="item === extensions[0].name">{{ item }}</option>
+        </select>
+      </div>
 
-    <div>style:
-      <select @change="changeTheme($event)">
-        <option v-for="(item, index) in themesListArray()" :key="index" :value="index" :selected="item === extensions[1].name">{{ item }}</option>
-      </select>
-    </div>
-
+      <div>style:
+        <select @change="changeTheme($event)">
+          <option v-for="(item, index) in themesListArray()" :key="index" :value="index" :selected="item === extensions[1].name">{{ item }}</option>
+        </select>
+      </div>
+    </header>
 
 <!--    :value="props.code"-->
 <!--    v-model="code"-->
@@ -157,6 +172,11 @@ function changeDoc(ev, id) {
       @focus="log('focus', $event)"
       @blur="log('blur', $event)"
     />
+
+    <footer>
+      <button @click="addCode">Add +</button>
+      <button @click="removeCode">remove x</button>
+    </footer>
   </section>
 
 </template>

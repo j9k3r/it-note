@@ -36,17 +36,33 @@ export const useNotesStore = defineStore('notes', () => {
     },
 ])
 
-  function updateDoc(state, id) {
+  function updateDoc(state: string, id: number) {
     listNotes.value[id].text = state
   }
 
-  function updateTheme(state, id) {
+  function updateTheme(state: string, id: number) {
     listNotes.value[id].option.theme = state
   }
 
-  function updateLang(state, id) {
+  function updateLang(state: string, id: number) {
     listNotes.value[id].option.lang = state
   }
 
-  return { listNotes, updateDoc, updateLang, updateTheme }
+  function addCodemirror(id: number) {
+    let codeMirroeExaple = {
+        type: 'codemirror',
+        option: {
+          lang: 'javascript',
+          theme: 'dracula'
+        },
+        text: ''
+    }
+    listNotes.value.splice(id !== 0 ? id+1 : 0, 0, codeMirroeExaple)
+  }
+
+  function removeCodemirror(id: number) {
+    listNotes.value.splice(id, 1)
+  }
+
+  return { listNotes, updateDoc, updateLang, updateTheme, addCodemirror, removeCodemirror}
 })
