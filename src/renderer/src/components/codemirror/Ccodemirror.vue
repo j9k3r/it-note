@@ -1,41 +1,43 @@
 <script setup lang="ts">
-import {  ref, shallowRef } from "vue";
+import { computed, reactive, ref, shallowRef } from "vue";
+import { useNotesStore } from "../../store/notes";
 import { Codemirror } from 'vue-codemirror'
-import { javascript } from '@codemirror/lang-javascript'
-
+import { themes, themesList } from "./themes";
 
 import { language } from '@codemirror/language'
-
+import { javascript } from '@codemirror/lang-javascript'
 import { htmlLanguage } from '@codemirror/lang-html';
+import { langs, langList } from "./langs";
 
 
+const props = defineProps({
+  code: String,
+  id: Number,
+  theme: String,
+  lang: String
+})
 
-import themes from "./themes";
+const notes = useNotesStore()
 
-
-const code = ref(`console.log('Hello, world!')`)
-const myTabSize = ref(3);
-
-// const initialEditorState = EditorState.create({
-//   doc: code.value, // начальный код
-//   extensions: extensions // расширения (например, язык и тема)
+// const curentLang = computed(() => {
+//   return view.value.state.facet(language).name
 // })
 
-// const extensions = [
-//   language.of(javascript()),
-//   oneDark,
-//   tabSize.of(EditorState.tabSize.of(8))
-// ]
+const themesListArray = () => {
+  // const themesArray = Object.keys(themesList).filter(key => !isNaN(Number(themesList[key])));
+  return Object.keys(themesList).filter(key => Number.isInteger(themesList[key]))
+}
+
+const code = ref(`console.log('Hello, world!')`)
+// const code = ref(
+//             'const code = `function myFunction() {\n' +
+//                   '  console.log(\'Hello, World!\');\n' +
+//                   '}`;'
+// )
 
 const extensions = ref([
-  // language.of(javascript()),
-  // javascript(),v
+  // javascript(),
   htmlLanguage,
-  // oneDark,
-  // mytheme.of(ayuLight)
-  // themeConfig.of([themes[1]])
-  // themeConfig.of([themes[1].extension])
-  // themeConfig.of(themes[1].extension)
   themes[0]
 ])
 
@@ -43,6 +45,21 @@ const extensions = ref([
 const view = shallowRef()
 const handleReady = (payload) => {
   view.value = payload.view
+
+  if (props.theme) {
+    let newTheme = themesList[props.theme]
+    // console.log(extensions.value[1])
+    // console.log(newTheme)
+    // extensions.value[1] = themes[newTheme]
+
+
+    // extensions.value[1] = themes[newTheme]
+    extensions.value = [
+      // htmlLanguage,
+      langs[langList[props.lang]],
+      themes[newTheme]
+    ]
+  }
 }
 
 
@@ -61,28 +78,18 @@ const getCodemirrorStates = () => {
 
 
 function log(eventType, event) {
-  console.log('Event type:', eventType);
-  console.log('Event object:', event);
+  // console.log('Event type:', eventType);
+  // console.log('Event object:', event);
 
-  // EditorState.tabSize.of(16)
 
   //изменение состояния редактора
-  const state = view.value.state // Получить текущее состояние редактора
+  // const state = view.value.state // Получить текущее состояние редактора
   // const updatedText = state.doc.toString() // Получить содержимое
   // console.log('EditorState object:', updatedText);
 
+  // const languag =  state.facet(language)
 
-  // view.value.dispatch({
-  //   effects: tabSize.reconfigure(EditorState.tabSize.of(28))
-  // })
-// console.log(state.facet(EditorState.tabSize))
-
-
-// const language = state.facet(EditorState.syntax).name.toLowerCase()
-// const languag = language.get(state).name.toLowerCase()
-  const languag =  state.facet(language)
-
-  console.log('Current language: ', languag)
+  // console.log('Current language: ', languag)
 
 }
 
@@ -90,20 +97,33 @@ function log(eventType, event) {
 function changeTheme(ev) {
   console.log('Ch theme ',  ev.target.value)
 
-
-  // currentTheme.value = themes[0].extension
   const selectedTheme = themes[Number(ev.target.value)];
 
-
-  // extensions.value = [
-  //   htmlLanguage,
-  //   themes[2].extension
-  // ]
-
   extensions.value = [
-    htmlLanguage,
+    // htmlLanguage,
+    extensions.value[0],
     selectedTheme
   ]
+
+  notes.updateTheme(themesList[Number(ev.target.value)], props.id)
+}
+
+function changeLang(ev) {
+  console.log('Ch theme ', ev.target.value)
+
+  const selectedLang = langs[Number(ev.target.value)];
+
+  extensions.value = [
+    // htmlLanguage,
+    selectedLang,
+    extensions.value[1]
+  ]
+
+  notes.updateLang(langList[Number(ev.target.value)], props.id)
+}
+
+function changeDoc(ev, id) {
+  notes.updateDoc(ev, id)
 }
 
 </script>
@@ -111,19 +131,30 @@ function changeTheme(ev) {
 <template>
 
   <section>
-    <select @change="changeTheme($event)">
-      <option  v-for="(item, index) in themes" :key="index" :value="index">{{item.name}}</option>
-    </select>
+    <div>
+<!--      :selected="item.name === curentLang"-->
+      <select @change="changeLang($event)">
+        <option v-for="(item, index) in langs" :key="index" :value="index" :selected="item.name === extensions[0].name">{{ item.name }}</option>
+      </select>
+    </div>
+
+    <div>
+      <select @change="changeTheme($event)">
+        <option v-for="(item, index) in themesListArray()" :key="index" :value="index" :selected="item === extensions[1].name">{{ item }}</option>
+      </select>
+    </div>
 
 
-
+<!--    :value="props.code"-->
+<!--    v-model="code"-->
     <codemirror
-      v-model="code"
+      :modelValue="props.code"
+      @update:modelValue="changeDoc($event, props.id)"
       placeholder="Code goes here..."
       :style="{ height: '400px' }"
       :autofocus="true"
       :indent-with-tab="true"
-      :tab-size="myTabSize"
+      :tab-size="3"
       :extensions="extensions"
       @ready="handleReady"
 

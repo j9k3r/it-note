@@ -1,32 +1,32 @@
-import {dracula} from 'thememirror';
-import {amy} from 'thememirror';
-import {ayuLight} from 'thememirror';
-import { oneDark } from "@codemirror/theme-one-dark";
+import { oneDark } from '@codemirror/theme-one-dark'
+import { dracula } from 'thememirror'
+import { amy } from 'thememirror'
+import { ayuLight } from 'thememirror'
 
-const themes = [
+export enum themesList {
+  oneDark,
+  dracula,
+  amy,
+  ayuLight,
+}
+
+export const themes = [
+  {
+    extension: oneDark,
+    name: themesList[themesList.oneDark]
+  },
   {
     extension: dracula,
-    name: 'dracula'
+    name: themesList[themesList.dracula]
   },
   {
     extension: amy,
-    name: 'amy'
+    name: themesList[themesList.amy]
   },
   {
     extension: ayuLight,
-    name: 'ayuLight'
+    name: themesList[themesList.ayuLight]
   },
-  {
-    extension: oneDark,
-    name: 'oneDark'
-  }
-
 ]
 
-// export enum Themes {
-//   0 = 'dracula',
-//   1 = 'amy',
-//   3 = 'ayuLight'
-// }
-
-export default themes
+// export default themes
