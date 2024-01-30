@@ -1,7 +1,8 @@
-import { javascriptLanguage } from "@codemirror/lang-javascript";
-import { htmlLanguage } from '@codemirror/lang-html';
-import { cssLanguage } from "@codemirror/lang-css";
-import { lessLanguage } from "@codemirror/lang-less";
+import { javascript } from "@codemirror/lang-javascript";
+import { html } from "@codemirror/lang-html";
+import { css } from "@codemirror/lang-css";
+import { less } from "@codemirror/lang-less";
+
 
 
 export enum langList {
@@ -11,21 +12,23 @@ export enum langList {
   less
 }
 
-export const langs = [
-  {
-    // ...javascript()
-    ...javascriptLanguage
+export const langs: { [key in langList]: { extension: any, name: string } }  = {
+    [langList.javascript]: {
+    extension: javascript(),
+    name: langList[langList.javascript]
   },
-  {
-    ...htmlLanguage
+   [langList.html]: {
+    extension: html(),
+    name: langList[langList.html]
   },
-  {
-    ...cssLanguage
+   [langList.css]: {
+    extension: css(),
+    name: langList[langList.css]
   },
-  {
-    ...lessLanguage
+   [langList.less]:{
+    extension: less(),
+    name: langList[langList.less]
   }
-
-]
+}
 
 // export default langs

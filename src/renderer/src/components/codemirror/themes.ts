@@ -10,23 +10,23 @@ export enum themesList {
   ayuLight,
 }
 
-export const themes = [
-  {
+export const themes: { [key in themesList]: { extension: any, name: string } }  = {
+  [themesList.oneDark]: {
     extension: oneDark,
     name: themesList[themesList.oneDark]
   },
-  {
+  [themesList.dracula]: {
     extension: dracula,
     name: themesList[themesList.dracula]
   },
-  {
+  [themesList.amy]: {
     extension: amy,
     name: themesList[themesList.amy]
   },
-  {
+  [themesList.ayuLight]: {
     extension: ayuLight,
     name: themesList[themesList.ayuLight]
   },
-]
+}
 
 // export default themes

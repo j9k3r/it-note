@@ -2,11 +2,8 @@
 import { computed, reactive, ref, shallowRef } from "vue";
 import { useNotesStore } from "../../store/notes";
 import { Codemirror } from 'vue-codemirror'
-import { themes, themesList } from "./themes";
 
-import { language } from '@codemirror/language'
-import { javascript } from '@codemirror/lang-javascript'
-import { htmlLanguage } from '@codemirror/lang-html';
+import { themes, themesList } from "./themes";
 import { langs, langList } from "./langs";
 
 
@@ -18,14 +15,13 @@ const props = defineProps({
 })
 
 const notes = useNotesStore()
-
-// const curentLang = computed(() => {
-//   return view.value.state.facet(language).name
-// })
-
 const themesListArray = () => {
   // const themesArray = Object.keys(themesList).filter(key => !isNaN(Number(themesList[key])));
   return Object.keys(themesList).filter(key => Number.isInteger(themesList[key]))
+}
+
+const langsListArray = () => {
+  return Object.keys(langList).filter(key => Number.isInteger(langList[key]))
 }
 
 const code = ref(`console.log('Hello, world!')`)
@@ -36,8 +32,7 @@ const code = ref(`console.log('Hello, world!')`)
 // )
 
 const extensions = ref([
-  // javascript(),
-  htmlLanguage,
+  langs[0],
   themes[0]
 ])
 
@@ -48,16 +43,19 @@ const handleReady = (payload) => {
 
   if (props.theme) {
     let newTheme = themesList[props.theme]
-    // console.log(extensions.value[1])
-    // console.log(newTheme)
-    // extensions.value[1] = themes[newTheme]
 
-
-    // extensions.value[1] = themes[newTheme]
     extensions.value = [
-      // htmlLanguage,
-      langs[langList[props.lang]],
+      extensions.value[0],
       themes[newTheme]
+    ]
+  }
+
+  if (props.lang) {
+    let newLang = langList[props.lang]
+
+    extensions.value = [
+      langs[newLang],
+      extensions.value[1]
     ]
   }
 }
@@ -100,7 +98,6 @@ function changeTheme(ev) {
   const selectedTheme = themes[Number(ev.target.value)];
 
   extensions.value = [
-    // htmlLanguage,
     extensions.value[0],
     selectedTheme
   ]
@@ -109,12 +106,11 @@ function changeTheme(ev) {
 }
 
 function changeLang(ev) {
-  console.log('Ch theme ', ev.target.value)
+  console.log('Ch lang ', ev.target.value)
 
   const selectedLang = langs[Number(ev.target.value)];
 
   extensions.value = [
-    // htmlLanguage,
     selectedLang,
     extensions.value[1]
   ]
@@ -131,14 +127,13 @@ function changeDoc(ev, id) {
 <template>
 
   <section>
-    <div>
-<!--      :selected="item.name === curentLang"-->
+    <div>lang:
       <select @change="changeLang($event)">
-        <option v-for="(item, index) in langs" :key="index" :value="index" :selected="item.name === extensions[0].name">{{ item.name }}</option>
+        <option v-for="(item, index) in langsListArray()" :key="index" :value="index" :selected="item === extensions[0].name">{{ item }}</option>
       </select>
     </div>
 
-    <div>
+    <div>style:
       <select @change="changeTheme($event)">
         <option v-for="(item, index) in themesListArray()" :key="index" :value="index" :selected="item === extensions[1].name">{{ item }}</option>
       </select>

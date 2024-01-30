@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useNotesStore } from '../../store/notes'
 import Ccodemirror from "../codemirror/Ccodemirror.vue";
-// import langs from "../codemirror/langs";
+// import {  langs } from "../codemirror/langs";
+
 
 // const lang = langs
 
