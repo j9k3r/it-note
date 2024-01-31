@@ -111,7 +111,7 @@ export const useNotesStore = defineStore('notes', () => {
   },
     {
       id: 2,
-      title: 'Заголовок 2',
+      title: 'Заголовок 24',
       description: 'Описание 2',
       tags: ['#js', '#php', '#css'],
       content: [
@@ -158,7 +158,7 @@ export const useNotesStore = defineStore('notes', () => {
     },
     {
       id: 3,
-      title: 'Заголовок 3',
+      title: 'Заголовок 34',
       description: 'Описание 3',
       tags: ['#js', '#php', '#css'],
       content: [

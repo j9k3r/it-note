@@ -8,23 +8,26 @@ const note = useNotesStore()
 const searchValue = ref('')
 
 const totalPages = computed(() => {
-  return Math.ceil(note.noteList.notes.length / note.noteList.itemsPerPage);
+  return Math.ceil(searchedAndPaginatedItems.value.length / note.noteList.itemsPerPage);
 })
 
-const paginatedItems = computed(() => {
+const searchedAndPaginatedItems = computed(() => {
+  const filteredItems = searchValue.value
+    ? note.noteList.notes.filter(item => item.title.toLowerCase().includes(searchValue.value.toLowerCase()))
+    : note.noteList.notes;
+
+  return filteredItems;
+});
+
+const paginatedItems = computed(() => { //Todo перенести в searchedAndPaginatedItems
   const startIndex = (note.noteList.currentPage - 1) * note.noteList.itemsPerPage;
   const endIndex = startIndex + note.noteList.itemsPerPage;
-  return note.noteList.notes.slice(startIndex, endIndex);
+  return searchedAndPaginatedItems.value.slice(startIndex, endIndex);
 })
 
-const searchedItems = computed(() => {
-  if (searchValue.value) {
-    return paginatedItems.value.filter(item => item.title.toLowerCase().includes(searchValue.value.toLowerCase()));
-  } else {
-    return paginatedItems.value;
-  }
-})
-
+const updateItemsPerPage = (num) => {
+  note.noteList.itemsPerPage = num; //Todo вынести в стор
+};
 function updateCurrentPage(page) {
     note.updateCurrentPage(page);
 }
@@ -36,7 +39,7 @@ function updateCurrentPage(page) {
     <input v-model="searchValue" placeholder="Поиск по title" />
   </header>
   <section>
-    <dl v-for="(item, index) in searchedItems" :key="index" class="note">
+    <dl v-for="(item, index) in paginatedItems" :key="index" class="note">
       <dt class="note-title">
         <h3>{{item.id}} - {{ item.title }}</h3>
       </dt>
