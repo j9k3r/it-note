@@ -26,7 +26,7 @@ const props = defineProps({
 const notes = useNotesStore()
 
 // Codemirror: notes.note[props.id].type,
-const componentVariants= {
+const componentVariants= { //Todo убрать в Enum
   'codemirror': Codemirror,
   'textWrapp': TextWrapp
 }

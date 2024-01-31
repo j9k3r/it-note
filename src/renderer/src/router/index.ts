@@ -6,6 +6,7 @@ import { loadLayoutMiddleware } from '@/router/middleware/loadLayout.middleware'
 import { ResultType } from '@/main.types'
 import { saveErrorsToMeta } from '@/result.functions'
 import Note from '@/components/note/Note.vue'
+import NoteList from "../components/note/NoteList.vue";
 
 const router = createRouter({
   // history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,16 @@ const router = createRouter({
       name: 'noteEdit',
       props: (route) => ({noteId: parseInt(route.params.noteId)}),
       component: Note
+    },
+    {
+      path: '/note/',
+      name: 'noteCreate',
+      component: Note
+    },
+    {
+      path: '/note/list',
+      name: 'noteList',
+      component: NoteList
     }
   ]
 })

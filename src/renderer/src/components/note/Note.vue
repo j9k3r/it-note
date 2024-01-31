@@ -2,7 +2,8 @@
 import { useNotesStore } from '../../store/notes'
 import ContentWrapper from "../codemirror/ContentWrapper.vue";
 
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 
 // import { themesList } from "../codemirror/themes";
 // import { langList } from "../codemirror/langs";
@@ -10,6 +11,8 @@ import { ref } from "vue";
 
 
 // const lang = langs
+
+const route = useRoute()
 
 const notes = useNotesStore()
 
@@ -24,18 +27,34 @@ const props = defineProps({
 // const themeDefault = themesList[0 as keyof typeof themesList].toString()
 
 
-
 // const allNotes = notes.note
 
 function addCode(type: string) {
   notes.addElement(0, type)
 }
+
+onMounted(() => {
+  if (route.name === 'noteCreate') {
+    // console.log(route.name)
+    notes.note = {
+      // id: 0,
+      // title: '',
+      // description: '',
+      // tags: [],
+      content: []
+    }
+  }
+})
+
 </script>
 
 <template>
   <header>
     <div id="main-content">
-      storeId: {{notes.note.id}} propsId: {{ props.noteId }}<br>
+      <span v-if="route.name !== 'noteCreate'">
+        storeId: {{notes.note.id}}
+        propsId: {{ props.noteId }}<br>
+      </span>
       Заголовок: <input v-model="notes.note.title">
       Описание: <textarea v-model="notes.note.description"></textarea>
     </div>

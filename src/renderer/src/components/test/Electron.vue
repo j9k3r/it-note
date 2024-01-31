@@ -14,7 +14,9 @@
     <nav>
       <ul>
         <li><router-link :to="{'name':'test', params: {test: 'Hello world' }}">test page</router-link></li>
-        <li><router-link :to="{'name':'noteEdit', params: {noteId: 1 }}">Note</router-link></li>
+        <li><router-link :to="{'name':'noteEdit', params: {noteId: 1 }}">Note edit id 1</router-link></li>
+        <li><router-link :to="{'name':'noteCreate'}">Note create</router-link></li>
+        <li><router-link :to="{'name':'noteList'}">Note List</router-link></li>
       </ul>
     </nav>
   </p>
