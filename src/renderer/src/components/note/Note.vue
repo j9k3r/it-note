@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useNotesStore } from '../../store/notes'
-import Ccodemirror from "../codemirror/Ccodemirror.vue";
+import ContentWrapper from "../codemirror/ContentWrapper.vue";
+
+import { ref } from "vue";
+
 // import { themesList } from "../codemirror/themes";
 // import { langList } from "../codemirror/langs";
 // import {  langs } from "../codemirror/langs";
@@ -10,40 +13,64 @@ import Ccodemirror from "../codemirror/Ccodemirror.vue";
 
 const notes = useNotesStore()
 
+const props = defineProps({
+  noteId: {
+    type: Number,
+    required: false
+  }
+})
+
 // const langDefault = langList[0 as keyof typeof langList].toString()
 // const themeDefault = themesList[0 as keyof typeof themesList].toString()
 
 
 
-// const allNotes = notes.listNotes
+// const allNotes = notes.note
 
-function addCode() {
-  notes.addCodemirror(0)
+function addCode(type: string) {
+  notes.addElement(0, type)
 }
 </script>
 
 <template>
   <header>
-    <button @click="addCode">Add codemirror +</button>
+    <div id="main-content">
+      storeId: {{notes.note.id}} propsId: {{ props.noteId }}<br>
+      Заголовок: <input v-model="notes.note.title">
+      Описание: <textarea v-model="notes.note.description"></textarea>
+    </div>
+
+    <button @click="addCode('codemirror')">code +</button>
+    <button @click="addCode('textWrapp')">text +</button>
   </header>
   <section>
-<!--    <h2>Title: {{notes.listNotes[0][0].type}}</h2>-->
+<!--    <h2>Title: {{notes.note[0][0].type}}</h2>-->
 
 <!--    :lang="item.option.lang ? item.option.lang : langDefault"-->
 <!--    :theme="item.option.theme ? item.option.theme : themeDefault"-->
 
-    <ccodemirror v-for="(item, index) in notes.listNotes" class="ccodemirror"
-                 :key="item"
-                 :code="item.text"
-                 :lang="item.option.lang"
-                 :theme="item.option.theme"
-                 :id="index">
-    </ccodemirror>
-
+    <content-wrapper
+      v-for="(item, index) in notes.note.content"
+      :id="index"
+      :key="item"
+      class="ccodemirror"
+      :code="item.text"
+      :lang="item.option.lang"
+      :theme="item.option.theme"
+      :type="item.type"
+    >
+    </content-wrapper>
   </section>
 </template>
 
 <style scoped>
+#main-content {
+  display: flex;
+  flex-direction: column;
+  textarea {
+    height: 80px;
+  }
+}
 .ccodemirror {
   margin-top: 20px;
 }

@@ -78,4 +78,9 @@ function cbSumErr(ev: number): boolean {
     padding: 5px;
   }
 }
+
+button {
+  padding: 2px;
+  margin-inline: 5px;
+}
 </style>

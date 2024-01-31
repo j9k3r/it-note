@@ -6,10 +6,13 @@ import { Codemirror } from 'vue-codemirror'
 import { themes, themesList } from "./themes";
 import { langs, langList } from "./langs";
 
+import TextWrapp from "./TextWrapp.vue";
+
 
 const props = defineProps({
   code: String,
   id: Number,
+  type: String,
   theme: {
     type: String,
     default: themesList[0 as keyof typeof themesList]
@@ -21,6 +24,12 @@ const props = defineProps({
 })
 
 const notes = useNotesStore()
+
+// Codemirror: notes.note[props.id].type,
+const componentVariants= {
+  'codemirror': Codemirror,
+  'textWrapp': TextWrapp
+}
 const themesListArray = () => {
   // const themesArray = Object.keys(themesList).filter(key => !isNaN(Number(themesList[key])));
   return Object.keys(themesList).filter(key => Number.isInteger(themesList[key]))
@@ -128,12 +137,19 @@ function changeDoc(ev, id) {
   notes.updateDoc(ev, id)
 }
 
-function addCode() {
-  notes.addCodemirror(props.id)
+function addCode(type: string) {
+  notes.addElement(props.id, type)
 }
 
 function removeCode() {
-  notes.removeCodemirror(props.id)
+  notes.removeElement(props.id)
+}
+
+function elementUp() {
+  notes.elementUp(props.id)
+}
+function elementDown() {
+  notes.elementDown(props.id)
 }
 
 </script>
@@ -142,39 +158,65 @@ function removeCode() {
 
   <section>
     <header>
-      <div>lang:
-        <select @change="changeLang($event)">
-          <option v-for="(item, index) in langsListArray()" :key="index" :value="index" :selected="item === extensions[0].name">{{ item }}</option>
-        </select>
+      <div v-if="props.type === 'codemirror'">
+        <div>lang:
+          <select @change="changeLang($event)">
+            <option v-for="(item, index) in langsListArray()" :key="index" :value="index" :selected="item === extensions[0].name">{{ item }}</option>
+          </select>
+        </div>
+
+        <div>style:
+          <select @change="changeTheme($event)">
+            <option v-for="(item, index) in themesListArray()" :key="index" :value="index" :selected="item === extensions[1].name">{{ item }}</option>
+          </select>
+        </div>
       </div>
 
-      <div>style:
-        <select @change="changeTheme($event)">
-          <option v-for="(item, index) in themesListArray()" :key="index" :value="index" :selected="item === extensions[1].name">{{ item }}</option>
-        </select>
+      <div class="element-position">
+        <button @click="elementUp()">Up</button>
+        <button @click="elementDown()">Down</button>
       </div>
     </header>
 
 <!--    :value="props.code"-->
 <!--    v-model="code"-->
-    <codemirror
-      :modelValue="props.code"
-      @update:modelValue="changeDoc($event, props.id)"
-      placeholder="Code goes here..."
-      :style="{ height: '400px' }"
-      :autofocus="true"
-      :indent-with-tab="true"
-      :tab-size="3"
-      :extensions="extensions"
-      @ready="handleReady"
 
-      @change="log('change', $event)"
-      @focus="log('focus', $event)"
-      @blur="log('blur', $event)"
-    />
+<!--    :is="comp[notes.note.content[props.id].type]"-->
+    <component :is="componentVariants[props.type]"
+
+          :modelValue="props.code"
+          @update:modelValue="changeDoc($event, props.id)"
+          placeholder="Code goes here..."
+          :style="{ height: '400px' }"
+          :autofocus="true"
+          :indent-with-tab="true"
+          :tab-size="3"
+          :extensions="extensions"
+          @ready="handleReady"
+
+          @change="log('change', $event)"
+          @focus="log('focus', $event)"
+          @blur="log('blur', $event)"
+    ></component>
+<!--    <codemirror-->
+<!--      :modelValue="props.code"-->
+<!--      @update:modelValue="changeDoc($event, props.id)"-->
+<!--      placeholder="Code goes here..."-->
+<!--      :style="{ height: '400px' }"-->
+<!--      :autofocus="true"-->
+<!--      :indent-with-tab="true"-->
+<!--      :tab-size="3"-->
+<!--      :extensions="extensions"-->
+<!--      @ready="handleReady"-->
+
+<!--      @change="log('change', $event)"-->
+<!--      @focus="log('focus', $event)"-->
+<!--      @blur="log('blur', $event)"-->
+<!--    />-->
 
     <footer>
-      <button @click="addCode">Add +</button>
+      <button @click="addCode('codemirror')">code +</button>
+      <button @click="addCode('textWrapp')">text +</button>
       <button @click="removeCode">remove x</button>
     </footer>
   </section>
@@ -182,5 +224,9 @@ function removeCode() {
 </template>
 
 <style scoped>
-
+.element-position {
+  display: flex;
+  justify-content: right;
+  padding: 5px;
+}
 </style>

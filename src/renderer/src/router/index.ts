@@ -22,10 +22,11 @@ const router = createRouter({
       component: Test
     },
     {
-      path: '/note',
-      name: 'note',
+      path: '/note/:noteId',
+      name: 'noteEdit',
+      props: (route) => ({noteId: parseInt(route.params.noteId)}),
       component: Note
-    },
+    }
   ]
 })
 
