@@ -36,6 +36,8 @@
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
     "codemirror": "^6.0.1",
+    "lodash": "^4.17.21",
+    "nedb-promises": "^6.2.3",
     "pinia": "^2.1.7",
     "thememirror": "^2.0.1",
     "vue-codemirror": "^6.1.1",

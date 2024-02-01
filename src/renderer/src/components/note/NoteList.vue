@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { useNotesStore } from "../../store/notes";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const note = useNotesStore()
 
@@ -26,17 +26,36 @@ const paginatedItems = computed(() => { //Todo перенести в searchedAnd
 })
 
 const updateItemsPerPage = (num) => {
-  note.noteList.itemsPerPage = num; //Todo вынести в стор
-};
+  if(num)
+    note.noteList.itemsPerPage = num
+}
 function updateCurrentPage(page) {
     note.updateCurrentPage(page);
 }
 
+// onMounted(() => {
+//   window.api.db.api.getAllNotes().then((result) => {
+//     note.noteList.notes = result
+//     console.log(result);
+//   })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// })
 </script>
 
 <template>
   <header>
-    <input v-model="searchValue" placeholder="Поиск по title" />
+    <div id="element-viwer">
+      <div>
+        <label>на стр:</label>
+        <input :value="note.noteList.itemsPerPage" @input="updateItemsPerPage($event.target.value)" type="number">
+      </div>
+      <div>
+        <label>поиск:</label>
+        <input v-model="searchValue" placeholder="Поиск по title" />
+      </div>
+    </div>
   </header>
   <section>
     <dl v-for="(item, index) in paginatedItems" :key="index" class="note">
@@ -62,6 +81,14 @@ function updateCurrentPage(page) {
 .note {
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+header {
+  #element-viwer {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Две одинаковые колонки */
+    gap: 10px; /* Отступ между элементами */
+  }
 }
 
 footer {

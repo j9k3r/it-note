@@ -1,17 +1,24 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+// import { type } from "node:os";
+
+// import db from '../../../../db';
+// import db from './datastore'
+import _ from 'lodash';
 
 interface Note {
-  id?: number;
-  title?: string;
-  description?: string;
-  tags?: string[];
+  _id?: string
+  createdAt?: object
+  updatedAt: object
+  title?: string
+  description?: string
+  tags?: string[]
   content: {text?: string, type?: string, option: { theme?:string, lang?: string}}[]
 }
 
 export const useNotesStore = defineStore('notes', () => {
   const note = ref<Note>({
-    id: 1,
+    // _id: '1',
     title: 'Заголовок',
     description: 'Описание',
     tags: ['#js', '#php', '#css'],
@@ -63,7 +70,7 @@ export const useNotesStore = defineStore('notes', () => {
     itemsPerPage: 2,
     notes: <Note[]>[
     {
-    id: 1,
+    _id: '1',
     title: 'Заголовок 1',
     description: 'Описание 1',
     tags: ['#js', '#php', '#css'],
@@ -110,7 +117,7 @@ export const useNotesStore = defineStore('notes', () => {
     ]
   },
     {
-      id: 2,
+      _id: '2',
       title: 'Заголовок 24',
       description: 'Описание 2',
       tags: ['#js', '#php', '#css'],
@@ -157,7 +164,7 @@ export const useNotesStore = defineStore('notes', () => {
       ]
     },
     {
-      id: 3,
+      _id: '3',
       title: 'Заголовок 34',
       description: 'Описание 3',
       tags: ['#js', '#php', '#css'],
@@ -204,7 +211,7 @@ export const useNotesStore = defineStore('notes', () => {
       ]
     },
     {
-      id: 4,
+      _id: '4',
       title: 'Заголовок 4',
       description: 'Описание 4',
       tags: ['#js', '#php', '#css'],
@@ -318,6 +325,13 @@ export const useNotesStore = defineStore('notes', () => {
     noteList.value.itemsPerPage = num;
   }
 
+  function createNote() {
+    // const x = JSON.stringify(note.value)
+    // const z = JSON.parse(x)
+    const clonedData = _.cloneDeep(note.value)
+
+    window.api.db.api.addNote(clonedData)
+  }
 
   return {
     note,
@@ -330,6 +344,7 @@ export const useNotesStore = defineStore('notes', () => {
     elementUp,
     elementDown,
     updateCurrentPage,
-    updateItemsPerPage
+    updateItemsPerPage,
+    createNote
   }
 })

@@ -18,7 +18,7 @@ const notes = useNotesStore()
 
 const props = defineProps({
   noteId: {
-    type: Number,
+    type: String,
     required: false
   }
 })
@@ -44,7 +44,30 @@ onMounted(() => {
       content: []
     }
   }
+
+  if (route.name === 'noteEdit') {
+
+    window.api.db.api.getNoteById('PsxqMRQFS1lXc0Or').then((result) => {
+      notes.note = result
+      console.log(result);
+    })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
 })
+
+function addN() {
+ // console.log(window.api.readDir('.'))
+ // console.log(window.api.db.api.addNote(notes.note))
+
+  // window.api.db.api.addNote({test: 123})
+
+
+  // window.api.db.api.addNote(notes.value.note)
+  // window.api.readdir('.')
+}
 
 </script>
 
@@ -52,7 +75,7 @@ onMounted(() => {
   <header>
     <div id="main-content">
       <span v-if="route.name !== 'noteCreate'">
-        storeId: {{notes.note.id}}
+        storeId: {{notes.note._id}}
         propsId: {{ props.noteId }}<br>
       </span>
       Заголовок: <input v-model="notes.note.title">
@@ -80,6 +103,10 @@ onMounted(() => {
     >
     </content-wrapper>
   </section>
+  <footer>
+    <button @click="notes.createNote()">Сохранить</button>
+<!--    <button @click="addN()">Сохранить</button>-->
+  </footer>
 </template>
 
 <style scoped>
