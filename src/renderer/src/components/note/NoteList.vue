@@ -1,47 +1,56 @@
 <script setup lang="ts">
 
-import { useNotesStore } from "../../store/notes";
-import { computed, onMounted, ref } from "vue";
+import { useNotesStore } from "../../store/notes"
+import { computed, onMounted, ref } from "vue"
+import { Note } from "../../interfaces"
 
 const note = useNotesStore()
 
 const searchValue = ref('')
 
-const totalPages = computed(() => {
-  return Math.ceil(searchedAndPaginatedItems.value.length / note.noteList.itemsPerPage);
+const totalPages = computed<number>(() => {
+  return Math.ceil(searchedAndPaginatedItems.value.length / note.noteList.itemsPerPage)
 })
 
-const searchedAndPaginatedItems = computed(() => {
+const searchedAndPaginatedItems = computed<Note[]>(() => {
   const filteredItems = searchValue.value
     ? note.noteList.notes.filter(item => item.title.toLowerCase().includes(searchValue.value.toLowerCase()))
-    : note.noteList.notes;
+    : note.noteList.notes
 
-  return filteredItems;
+  return filteredItems
 });
 
-const paginatedItems = computed(() => { //Todo перенести в searchedAndPaginatedItems
-  const startIndex = (note.noteList.currentPage - 1) * note.noteList.itemsPerPage;
-  const endIndex = startIndex + note.noteList.itemsPerPage;
-  return searchedAndPaginatedItems.value.slice(startIndex, endIndex);
+const paginatedItems = computed<Note[]>(() => {
+  const startIndex = (note.noteList.currentPage - 1) * note.noteList.itemsPerPage
+  const endIndex = startIndex + note.noteList.itemsPerPage
+  return searchedAndPaginatedItems.value.slice(startIndex, endIndex)
 })
 
-const updateItemsPerPage = (num) => {
+const updateItemsPerPage = (num: number) => {
   if(num)
     note.noteList.itemsPerPage = num
 }
-function updateCurrentPage(page) {
-    note.updateCurrentPage(page);
+function updateCurrentPage(page: number) {
+  note.updateCurrentPage(page)
 }
 
-// onMounted(() => {
-//   window.api.db.api.getAllNotes().then((result) => {
-//     note.noteList.notes = result
-//     console.log(result);
-//   })
-//     .catch((error) => {
-//       console.error(error);
-//     });
+// onBeforeMount(() => {
+//   note.noteList.currentPage = 1
+//   note.noteList.itemsPerPage = 5
+//     // {currentPage: 1, ItemsPerPag: 5}
+//   // note.updateCurrentPage(1)
+//   // note.updateItemsPerPage(4)
 // })
+
+onMounted(() => {
+  window.api.db.api.getAllNotes().then((result) => {
+    note.noteList.notes = result
+    console.log(result);
+  })
+    .catch((error) => {
+      console.error(error);
+    });
+})
 </script>
 
 <template>
@@ -49,7 +58,11 @@ function updateCurrentPage(page) {
     <div id="element-viwer">
       <div>
         <label>на стр:</label>
-        <input :value="note.noteList.itemsPerPage" @input="updateItemsPerPage($event.target.value)" type="number">
+        <input
+          :value="note.noteList.itemsPerPage"
+          type="number"
+          @input="updateItemsPerPage($event.target.value)"
+        />
       </div>
       <div>
         <label>поиск:</label>
@@ -60,11 +73,15 @@ function updateCurrentPage(page) {
   <section>
     <dl v-for="(item, index) in paginatedItems" :key="index" class="note">
       <dt class="note-title">
-        <h3>{{item.id}} - {{ item.title }}</h3>
+        <router-link :to="{ name: 'noteEdit', params: { noteId: item._id } }">
+          <h3>{{ item._id }} - {{ item.title }}</h3></router-link
+        >
       </dt>
       <dd>
-        {{item.description}}
+        {{ item.description }}
+        <h6>{{ item.createdAt }}</h6>
       </dd>
+      <button @click="note.deleteNote(item._id)">del x</button>
     </dl>
   </section>
   <footer>

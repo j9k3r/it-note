@@ -3,16 +3,11 @@ import { useNotesStore } from '../../store/notes'
 import ContentWrapper from "../codemirror/ContentWrapper.vue";
 
 import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
-// import { themesList } from "../codemirror/themes";
-// import { langList } from "../codemirror/langs";
-// import {  langs } from "../codemirror/langs";
-
-
-// const lang = langs
 
 const route = useRoute()
+const router = useRouter()
 
 const notes = useNotesStore()
 
@@ -26,28 +21,21 @@ const props = defineProps({
 // const langDefault = langList[0 as keyof typeof langList].toString()
 // const themeDefault = themesList[0 as keyof typeof themesList].toString()
 
-
-// const allNotes = notes.note
-
 function addCode(type: string) {
   notes.addElement(0, type)
 }
 
 onMounted(() => {
-  if (route.name === 'noteCreate') {
-    // console.log(route.name)
-    notes.note = {
-      // id: 0,
-      // title: '',
-      // description: '',
-      // tags: [],
-      content: []
-    }
-  }
+  // if (route.name === 'noteCreate') {
+  //   notes.note = {
+  //     content: []
+  //   }
+  // }
 
   if (route.name === 'noteEdit') {
 
-    window.api.db.api.getNoteById('PsxqMRQFS1lXc0Or').then((result) => {
+    console.log('note_id ' ,props.noteId)
+    window.api.db.api.getNoteById(props.noteId).then((result) => {
       notes.note = result
       console.log(result);
     })
@@ -55,28 +43,25 @@ onMounted(() => {
         console.error(error);
       });
   }
-
 })
 
-function addN() {
- // console.log(window.api.readDir('.'))
- // console.log(window.api.db.api.addNote(notes.note))
-
-  // window.api.db.api.addNote({test: 123})
-
-
-  // window.api.db.api.addNote(notes.value.note)
-  // window.api.readdir('.')
+function removeNote() {
+  window.api.db.api.deleteNoteById(props.noteId).then(() => {
+    notes.updateCurrentPage(1)
+    router.push({ name: 'noteList'})
+  })
+    .catch((error) => {
+      console.error(error);
+    })
 }
-
 </script>
 
 <template>
   <header>
     <div id="main-content">
       <span v-if="route.name !== 'noteCreate'">
-        storeId: {{notes.note._id}}
-        propsId: {{ props.noteId }}<br>
+        Id: {{notes.note._id}}
+<!--        propsId: {{ props.noteId }}<br>-->
       </span>
       Заголовок: <input v-model="notes.note.title">
       Описание: <textarea v-model="notes.note.description"></textarea>
@@ -86,10 +71,6 @@ function addN() {
     <button @click="addCode('textWrapp')">text +</button>
   </header>
   <section>
-<!--    <h2>Title: {{notes.note[0][0].type}}</h2>-->
-
-<!--    :lang="item.option.lang ? item.option.lang : langDefault"-->
-<!--    :theme="item.option.theme ? item.option.theme : themeDefault"-->
 
     <content-wrapper
       v-for="(item, index) in notes.note.content"
@@ -104,7 +85,12 @@ function addN() {
     </content-wrapper>
   </section>
   <footer>
-    <button @click="notes.createNote()">Сохранить</button>
+    <button v-if="route.name === 'noteCreate'" @click="notes.createNote()">Создать</button>
+    <div v-else>
+      <button @click="removeNote()">Удалить</button>
+      <button @click="notes.updatedNote(props.noteId)">Обновить</button>
+    </div>
+
 <!--    <button @click="addN()">Сохранить</button>-->
   </footer>
 </template>

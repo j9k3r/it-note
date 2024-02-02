@@ -20,7 +20,18 @@ const api = {
     // const x = JSON.stringify(postData)
     // const z = JSON.parse(x)
     // console.log(z)
-    notes.insert(postData)
+    const insertNote = await notes.insert(postData)
+    return insertNote
+  },
+  updateNoteById: async (id, newData) => {
+    // Поиск записи по _id и обновление данных
+    const updatedNote = await notes.updateOne({ _id: id }, newData , false);
+    return updatedNote;
+  },
+
+  deleteNoteById: async (id) => {
+    const deletedNote = await notes.removeOne({ _id: id }, false);
+    return deletedNote;
   },
   getNoteById: async (id) => {
     const note = await notes.findOne({ _id: id })

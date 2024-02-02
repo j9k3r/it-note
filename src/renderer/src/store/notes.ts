@@ -1,263 +1,19 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-// import { type } from "node:os";
-
-// import db from '../../../../db';
-// import db from './datastore'
 import _ from 'lodash';
+import { Note, NoteList } from "../interfaces";
 
-interface Note {
-  _id?: string
-  createdAt?: object
-  updatedAt: object
-  title?: string
-  description?: string
-  tags?: string[]
-  content: {text?: string, type?: string, option: { theme?:string, lang?: string}}[]
-}
-
+// import { jsonNote, jsonNoteList } from '../components/note/MockNote'
 export const useNotesStore = defineStore('notes', () => {
   const note = ref<Note>({
-    // _id: '1',
-    title: 'Заголовок',
-    description: 'Описание',
-    tags: ['#js', '#php', '#css'],
-    content: [
-      {
-        type: 'codemirror',
-        option: {
-          lang: 'javascript',
-          theme: 'dracula'
-        },
-        text: "const code1 = `function myFunction() {\n console.log('Hello, World!');\n + }`;"
-      },
-      {
-        type: 'textWrapp',
-        text: 'какой то текст строка1\n строка 2\n строка3',
-        option: {
-          lang: '',
-          theme: ''
-        }
-      },
-      {
-        type: 'codemirror',
-        option: {
-          lang: 'html',
-          theme: 'amy'
-        },
-        text: '<div><h1>Hello world</h1></div>'
-      },
-      {
-        type: 'codemirror',
-        option: {
-          lang: 'css',
-          theme: 'ayuLight'
-        },
-        text:
-          '#errState {\n' +
-          '  display: flex;\n' +
-          '  justify-content: right;\n' +
-          '  span {\n' +
-          '    padding: 5px;\n' +
-          '  }\n' +
-          '}'
-      }
-    ]
+    content: []
   })
 
-  const noteList = ref({
+  const noteList = ref<NoteList>({
+    itemsPerPage: 5,
     currentPage: 1,
-    itemsPerPage: 2,
-    notes: <Note[]>[
-    {
-    _id: '1',
-    title: 'Заголовок 1',
-    description: 'Описание 1',
-    tags: ['#js', '#php', '#css'],
-    content: [
-      {
-        type: 'codemirror',
-        option: {
-          lang: 'javascript',
-          theme: 'dracula'
-        },
-        text: "const code1 = `function myFunction() {\n console.log('Hello, World!');\n + }`;"
-      },
-      {
-        type: 'textWrapp',
-        text: 'какой то текст строка1\n строка 2\n строка3',
-        option: {
-          lang: '',
-          theme: ''
-        }
-      },
-      {
-        type: 'codemirror',
-        option: {
-          lang: 'html',
-          theme: 'amy'
-        },
-        text: '<div><h1>Hello world</h1></div>'
-      },
-      {
-        type: 'codemirror',
-        option: {
-          lang: 'css',
-          theme: 'ayuLight'
-        },
-        text:
-          '#errState {\n' +
-          '  display: flex;\n' +
-          '  justify-content: right;\n' +
-          '  span {\n' +
-          '    padding: 5px;\n' +
-          '  }\n' +
-          '}'
-      }
-    ]
-  },
-    {
-      _id: '2',
-      title: 'Заголовок 24',
-      description: 'Описание 2',
-      tags: ['#js', '#php', '#css'],
-      content: [
-        {
-          type: 'codemirror',
-          option: {
-            lang: 'javascript',
-            theme: 'dracula'
-          },
-          text: "const code1 = `function myFunction() {\n console.log('Hello, World!');\n + }`;"
-        },
-        {
-          type: 'textWrapp',
-          text: 'какой то текст строка1\n строка 2\n строка3',
-          option: {
-            lang: '',
-            theme: ''
-          }
-        },
-        {
-          type: 'codemirror',
-          option: {
-            lang: 'html',
-            theme: 'amy'
-          },
-          text: '<div><h1>Hello world</h1></div>'
-        },
-        {
-          type: 'codemirror',
-          option: {
-            lang: 'css',
-            theme: 'ayuLight'
-          },
-          text:
-            '#errState {\n' +
-            '  display: flex;\n' +
-            '  justify-content: right;\n' +
-            '  span {\n' +
-            '    padding: 5px;\n' +
-            '  }\n' +
-            '}'
-        }
-      ]
-    },
-    {
-      _id: '3',
-      title: 'Заголовок 34',
-      description: 'Описание 3',
-      tags: ['#js', '#php', '#css'],
-      content: [
-        {
-          type: 'codemirror',
-          option: {
-            lang: 'javascript',
-            theme: 'dracula'
-          },
-          text: "const code1 = `function myFunction() {\n console.log('Hello, World!');\n + }`;"
-        },
-        {
-          type: 'textWrapp',
-          text: 'какой то текст строка1\n строка 2\n строка3',
-          option: {
-            lang: '',
-            theme: ''
-          }
-        },
-        {
-          type: 'codemirror',
-          option: {
-            lang: 'html',
-            theme: 'amy'
-          },
-          text: '<div><h1>Hello world</h1></div>'
-        },
-        {
-          type: 'codemirror',
-          option: {
-            lang: 'css',
-            theme: 'ayuLight'
-          },
-          text:
-            '#errState {\n' +
-            '  display: flex;\n' +
-            '  justify-content: right;\n' +
-            '  span {\n' +
-            '    padding: 5px;\n' +
-            '  }\n' +
-            '}'
-        }
-      ]
-    },
-    {
-      _id: '4',
-      title: 'Заголовок 4',
-      description: 'Описание 4',
-      tags: ['#js', '#php', '#css'],
-      content: [
-        {
-          type: 'codemirror',
-          option: {
-            lang: 'javascript',
-            theme: 'dracula'
-          },
-          text: "const code1 = `function myFunction() {\n console.log('Hello, World!');\n + }`;"
-        },
-        {
-          type: 'textWrapp',
-          text: 'какой то текст строка1\n строка 2\n строка3',
-          option: {
-            lang: '',
-            theme: ''
-          }
-        },
-        {
-          type: 'codemirror',
-          option: {
-            lang: 'html',
-            theme: 'amy'
-          },
-          text: '<div><h1>Hello world</h1></div>'
-        },
-        {
-          type: 'codemirror',
-          option: {
-            lang: 'css',
-            theme: 'ayuLight'
-          },
-          text:
-            '#errState {\n' +
-            '  display: flex;\n' +
-            '  justify-content: right;\n' +
-            '  span {\n' +
-            '    padding: 5px;\n' +
-            '  }\n' +
-            '}'
-        }
-      ]
-    }
-  ]})
+    notes: []
+  })
 
 
   function updateDoc(state: string, id: number) {
@@ -307,21 +63,19 @@ export const useNotesStore = defineStore('notes', () => {
     }
   }
   function elementDown(id: number) {
-    // console.log('id ',id)
-    // console.log('arr len ',note.value.content.length)
     if (id !== note.value.content.length - 1) {
       const removedElement = note.value.content.splice(id, 1)[0]
       note.value.content.splice(id + 1, 0, removedElement)
     }
-    // else {
-    //   console.log('last element')
-    // }
   }
 
-  function updateCurrentPage(page) {
+  function updateCurrentPage(page: number) {
     noteList.value.currentPage = page;
+
+    // const n = JSON.parse(jsonNote)
+    // console.log(n)
   }
-  function updateItemsPerPage(num) {
+  function updateItemsPerPage(num: number) {
     noteList.value.itemsPerPage = num;
   }
 
@@ -333,6 +87,23 @@ export const useNotesStore = defineStore('notes', () => {
     window.api.db.api.addNote(clonedData)
   }
 
+  function updatedNote(id: string) {
+    const clonedData = _.cloneDeep(note.value)
+    window.api.db.api.updateNoteById(id, clonedData)
+  }
+
+  function deleteNote(id: string) {
+    const index = noteList.value.notes.findIndex(item => item._id === id)
+    window.api.db.api.deleteNoteById(id).then((result) => {
+        console.log('delete result: ', result)
+        if (index !== -1) {
+          noteList.value.notes.splice(index, 1)
+        }
+      })
+        .catch((error) => {
+          console.error(error);
+        });
+  }
   return {
     note,
     noteList,
@@ -345,6 +116,8 @@ export const useNotesStore = defineStore('notes', () => {
     elementDown,
     updateCurrentPage,
     updateItemsPerPage,
-    createNote
+    createNote,
+    updatedNote,
+    deleteNote,
   }
 })

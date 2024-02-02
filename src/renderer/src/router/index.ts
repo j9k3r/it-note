@@ -25,7 +25,7 @@ const router = createRouter({
     {
       path: '/note/:noteId',
       name: 'noteEdit',
-      props: (route) => {noteId: route.params.noteId},
+      props: (route) => ({noteId: route.params.noteId}),
       component: Note
     },
     {
