@@ -1,97 +1,86 @@
 <script setup lang="ts">
-import Versions from './components/Versions.vue'
+import { onErrorCaptured, provide, ref, Ref } from 'vue'
+import { RouterView } from 'vue-router'
+import Layout from '@/layouts/Layout.vue'
+import ErrorComponent from '@/components/ErrorComponent.vue'
+import { ResultErrCapturedType } from './main.types'
+
+const errComponents: Ref<ResultErrCapturedType[]> = ref([] as ResultErrCapturedType[])
+
+const errQua: Ref<number> = ref(0)
+const showErr: Ref<boolean> = ref(true)
+
+// Логирование ошибки
+const logError = (error: Error, component, info: string) => {
+  const eErr = { result: false, error: error, component: component, info: info, componentName: '' }
+  if (component?.type?.name) {
+    eErr.componentName = component.type.name
+  } else {
+    eErr.componentName = 'Имя компонента не найдено'
+  }
+  errComponents.value.push(eErr)
+  console.log('Ошибка перехвачена')
+}
+
+// Обработка ошибок в компоненте
+onErrorCaptured(logError)
+provide('errComponents', errComponents)
+
+function cbSumErr(ev: number): boolean {
+  const oldStateErrQua = errQua.value
+  try {
+    if (oldStateErrQua === ev && oldStateErrQua != 0) {
+      throw new Error('error change quantity errQua')
+    }
+    errQua.value = ev
+    return true
+  } catch (e) {
+    if (e instanceof Error) {
+      const errc = new Error(e.message)
+      errComponents.value.push({
+        result: false,
+        error: errc,
+        component: self,
+        info: errc.message,
+        componentName: 'App.vue'
+      })
+      return false
+    } else {
+      throw new Error('broken catch')
+    }
+  }
+}
 </script>
 
 <template>
-  <Versions></Versions>
-
-  <svg class="hero-logo" viewBox="0 0 900 300">
-    <use xlink:href="./assets/icons.svg#electron" />
-  </svg>
-  <h2 class="hero-text">You've successfully created an Electron project with Vue and TypeScript</h2>
-  <p class="hero-tagline">Please try pressing <code>F12</code> to open the devTool</p>
-
-  <div class="links">
-    <div class="link-item">
-      <a target="_blank" href="https://electron-vite.org">Documentation</a>
+  <div>
+    <div id="errState">
+      <span>Ошибок: {{ errQua }}</span>
+      <span>Скрыть: <a @click="showErr = !showErr">{{ !showErr? 'Вкл': 'Выкл' }}</a></span>
     </div>
-    <div class="link-item link-dot">•</div>
-    <div class="link-item">
-      <a target="_blank" href="https://github.com/alex8088/electron-vite">Getting Help</a>
-    </div>
-    <div class="link-item link-dot">•</div>
-    <div class="link-item">
-      <a
-        target="_blank"
-        href="https://github.com/alex8088/quick-start/tree/master/packages/create-electron"
-      >
-        create-electron
-      </a>
-    </div>
+    <ErrorComponent
+      v-show="errQua !== 0 && showErr"
+      :err-components="errComponents"
+      @em-sum-error="cbSumErr($event)"
+    ></ErrorComponent>
   </div>
 
-  <div class="features">
-    <div class="feature-item">
-      <article>
-        <h2 class="title">Configuring</h2>
-        <p class="detail">
-          Config with <span>electron.vite.config.ts</span> and refer to the
-          <a target="_blank" href="https://electron-vite.org/config">config guide</a>.
-        </p>
-      </article>
-    </div>
-    <div class="feature-item">
-      <article>
-        <h2 class="title">HMR</h2>
-        <p class="detail">
-          Edit <span>src/renderer</span> files to test HMR. See
-          <a target="_blank" href="https://electron-vite.org/guide/hmr.html">docs</a>.
-        </p>
-      </article>
-    </div>
-    <div class="feature-item">
-      <article>
-        <h2 class="title">Hot Reloading</h2>
-        <p class="detail">
-          Run <span>'electron-vite dev --watch'</span> to enable. See
-          <a target="_blank" href="https://electron-vite.org/guide/hot-reloading.html">docs</a>.
-        </p>
-      </article>
-    </div>
-    <div class="feature-item">
-      <article>
-        <h2 class="title">Debugging</h2>
-        <p class="detail">
-          Check out <span>.vscode/launch.json</span>. See
-          <a target="_blank" href="https://electron-vite.org/guide/debugging.html">docs</a>.
-        </p>
-      </article>
-    </div>
-    <div class="feature-item">
-      <article>
-        <h2 class="title">Source Code Protection</h2>
-        <p class="detail">
-          Supported via built-in plugin <span>bytecodePlugin</span>. See
-          <a target="_blank" href="https://electron-vite.org/guide/source-code-protection.html">
-            docs
-          </a>
-          .
-        </p>
-      </article>
-    </div>
-    <div class="feature-item">
-      <article>
-        <h2 class="title">Packaging</h2>
-        <p class="detail">
-          Use
-          <a target="_blank" href="https://www.electron.build">electron-builder</a>
-          and pre-configured to pack your app.
-        </p>
-      </article>
-    </div>
-  </div>
+  <Layout>
+    <RouterView />
+  </Layout>
 </template>
 
-<style lang="less">
-@import './assets/css/styles.less';
+<style>
+#errState {
+  display: flex;
+  justify-content: right;
+  span {
+    padding: 5px;
+  }
+}
+
+button {
+  padding: 2px;
+  margin-inline: 5px;
+}
 </style>

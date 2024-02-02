@@ -1,8 +1,15 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import readDir from './readdir'
+// import { readFromDb, saveFromDb, removeFromDb } from './readdb';
+
+import db from './db'
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  readDir,
+  db
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

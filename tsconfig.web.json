@@ -7,12 +7,17 @@
     "src/preload/*.d.ts"
   ],
   "compilerOptions": {
+    "strict": true,
     "composite": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
+//    "baseUrl": "/",
     "paths": {
       "@renderer/*": [
         "src/renderer/src/*"
-      ]
-    }
+      ],
+      "@/*": ["src/renderer/src/*"]
+    },
+    "allowImportingTsExtensions": true,
+    "allowJs": true
   }
 }
