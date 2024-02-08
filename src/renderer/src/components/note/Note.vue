@@ -33,25 +33,20 @@ onMounted(() => {
   // }
 
   if (route.name === 'noteEdit') {
-
-    console.log('note_id ' ,props.noteId)
-    window.api.db.api.getNoteById(props.noteId).then((result) => {
-      notes.note = result
-      console.log(result);
-    })
-      .catch((error) => {
-        console.error(error);
-      });
+    console.log('note_id ', props.noteId)
+    notes.initNoteById(props.noteId)
   }
 })
 
 function removeNote() {
-  window.api.db.api.deleteNoteById(props.noteId).then(() => {
-    notes.updateCurrentPage(1)
-    router.push({ name: 'noteList'})
-  })
+  notes
+    .deleteNote(props.noteId)
+    .then(() => {
+      notes.updateCurrentPage(1)
+      router.push({ name: 'noteList' })
+    })
     .catch((error) => {
-      console.error(error);
+      console.error(error)
     })
 }
 </script>

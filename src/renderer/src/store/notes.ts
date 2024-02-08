@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import _ from 'lodash';
 import { Note, NoteList } from "../interfaces";
+import notesApi from "../services/notesApi";
 
 // import { jsonNote, jsonNoteList } from '../components/note/MockNote'
 export const useNotesStore = defineStore('notes', () => {
@@ -78,31 +78,35 @@ export const useNotesStore = defineStore('notes', () => {
   function updateItemsPerPage(num: number) {
     noteList.value.itemsPerPage = num;
   }
+  function initNoteById(noteId: string) {
+    notesApi.getDbNoteById(noteId).then((result) => {
+      if (result === null) throw Error('Note not found')
+      note.value = result
+    })
+  }
+
+  function initAllNotes() {
+    notesApi.getDbAllNotes().then((result) => {
+      noteList.value.notes = result
+    })
+  }
 
   function createNote() {
-    // const x = JSON.stringify(note.value)
-    // const z = JSON.parse(x)
-    const clonedData = _.cloneDeep(note.value)
-
-    window.api.db.api.addNote(clonedData)
+    notesApi.saveDbNote(note)
   }
 
   function updatedNote(id: string) {
-    const clonedData = _.cloneDeep(note.value)
-    window.api.db.api.updateNoteById(id, clonedData)
+    notesApi.updatedDbNote(id, note)
   }
 
-  function deleteNote(id: string) {
+  async function deleteNote(id: string) {
     const index = noteList.value.notes.findIndex(item => item._id === id)
-    window.api.db.api.deleteNoteById(id).then((result) => {
-        console.log('delete result: ', result)
-        if (index !== -1) {
-          noteList.value.notes.splice(index, 1)
-        }
-      })
-        .catch((error) => {
-          console.error(error);
-        });
+    notesApi.deleteDbNote(id).then((result) => {
+      if (result === 0) throw Error('Note not found')
+      if (result !== 0 && index !== -1) {
+        noteList.value.notes.splice(index, 1)
+      }
+    })
   }
   return {
     note,
@@ -116,8 +120,10 @@ export const useNotesStore = defineStore('notes', () => {
     elementDown,
     updateCurrentPage,
     updateItemsPerPage,
+    initNoteById,
+    initAllNotes,
     createNote,
     updatedNote,
-    deleteNote,
+    deleteNote
   }
 })

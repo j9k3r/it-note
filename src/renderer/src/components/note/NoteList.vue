@@ -1,8 +1,7 @@
 <script setup lang="ts">
-
-import { useNotesStore } from "../../store/notes"
-import { computed, onMounted, ref } from "vue"
-import { Note } from "../../interfaces"
+import { useNotesStore } from '../../store/notes'
+import { computed, onMounted, ref } from 'vue'
+import { Note } from '../../interfaces'
 
 const note = useNotesStore()
 
@@ -13,12 +12,12 @@ const totalPages = computed<number>(() => {
 })
 
 const searchedAndPaginatedItems = computed<Note[]>(() => {
-  const filteredItems = searchValue.value
-    ? note.noteList.notes.filter(item => item.title.toLowerCase().includes(searchValue.value.toLowerCase()))
+  return searchValue.value
+    ? note.noteList.notes.filter((item) =>
+        item.title.toLowerCase().includes(searchValue.value.toLowerCase())
+      )
     : note.noteList.notes
-
-  return filteredItems
-});
+})
 
 const paginatedItems = computed<Note[]>(() => {
   const startIndex = (note.noteList.currentPage - 1) * note.noteList.itemsPerPage
@@ -27,8 +26,7 @@ const paginatedItems = computed<Note[]>(() => {
 })
 
 const updateItemsPerPage = (num: number) => {
-  if(num)
-    note.noteList.itemsPerPage = num
+  if (num) note.noteList.itemsPerPage = num
 }
 function updateCurrentPage(page: number) {
   note.updateCurrentPage(page)
@@ -43,13 +41,7 @@ function updateCurrentPage(page: number) {
 // })
 
 onMounted(() => {
-  window.api.db.api.getAllNotes().then((result) => {
-    note.noteList.notes = result
-    console.log(result);
-  })
-    .catch((error) => {
-      console.error(error);
-    });
+  note.initAllNotes()
 })
 </script>
 
@@ -91,7 +83,6 @@ onMounted(() => {
       </li>
     </ul>
   </footer>
-
 </template>
 
 <style scoped>
